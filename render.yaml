@@ -1,0 +1,76 @@
+services:
+  # ─── Backend API ────────────────────────────────────────────────────────────
+  - type: web
+    name: webflow-ai-optimizer-api
+    runtime: node
+    plan: starter
+    region: oregon
+
+    rootDir: backend
+    buildCommand: npm install && npm run build
+    startCommand: npm start
+
+    envVars:
+      - key: NODE_ENV
+        value: production
+      - key: PORT
+        value: 3001
+      - key: FRONTEND_URL
+        fromService:
+          type: web
+          name: webflow-ai-optimizer-frontend
+          property: host
+
+      # Set these via Render dashboard → Environment:
+      - key: APP_API_KEY
+        sync: false
+      - key: OPENAI_API_KEY
+        sync: false
+      - key: WEBFLOW_API_TOKEN
+        sync: false
+
+      # Tuning (optional overrides)
+      - key: OPENAI_MODEL
+        value: gpt-4o
+      - key: BULK_CONCURRENCY
+        value: "5"
+      - key: RATE_LIMIT_MAX
+        value: "100"
+
+    healthCheckPath: /health
+    autoDeploy: true
+
+  # ─── Frontend (static) ──────────────────────────────────────────────────────
+  - type: web
+    name: webflow-ai-optimizer-frontend
+    runtime: static
+    plan: free
+
+    rootDir: frontend
+    buildCommand: npm install && npm run build
+    staticPublishPath: dist
+
+    envVars:
+      - key: VITE_API_URL
+        fromService:
+          type: web
+          name: webflow-ai-optimizer-api
+          property: host
+      - key: VITE_APP_API_KEY
+        sync: false
+
+    routes:
+      - type: rewrite
+        source: /*
+        destination: /index.html
+
+    headers:
+      - path: /*
+        name: X-Frame-Options
+        value: DENY
+      - path: /*
+        name: X-Content-Type-Options
+        value: nosniff
+      - path: /assets/*
+        name: Cache-Control
+        value: public, max-age=31536000, immutable

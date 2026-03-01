@@ -1,0 +1,46 @@
+{
+  "name": "webflow-ai-content-optimizer",
+  "version": "1.0.0",
+  "description": "ML-driven content generation, intelligent SEO rewrites, and one-click auto-bulk updates for any Webflow site",
+  "private": true,
+  "engines": {
+    "node": ">=20.0.0"
+  },
+  "scripts": {
+    "dev": "concurrently --names \"API,UI\" --prefix-colors \"cyan,magenta\" \"npm run dev --workspace=backend\" \"npm run dev --workspace=frontend\"",
+    "build": "npm run build --workspace=backend && npm run build --workspace=frontend",
+    "start": "npm run start --workspace=backend",
+    "install:all": "npm install && npm install --workspace=backend && npm install --workspace=frontend",
+    "test": "npm run test --workspace=backend && npm run test --workspace=frontend",
+    "lint": "npm run lint --workspace=backend && npm run lint --workspace=frontend",
+    "type-check": "npm run type-check --workspace=backend && npm run type-check --workspace=frontend",
+    "clean": "rimraf backend/dist frontend/dist",
+    "docker:dev": "docker-compose up --build",
+    "docker:down": "docker-compose down"
+  },
+  "workspaces": [
+    "backend",
+    "frontend"
+  ],
+  "devDependencies": {
+    "concurrently": "^8.2.2",
+    "rimraf": "^5.0.5"
+  },
+  "keywords": [
+    "webflow",
+    "openai",
+    "gpt-4o",
+    "cms",
+    "seo",
+    "content-generation",
+    "ai",
+    "typescript",
+    "react"
+  ],
+  "author": "Your Name",
+  "license": "MIT",
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/yourusername/webflow-ai-content-optimizer.git"
+  }
+}
